@@ -9,11 +9,13 @@ public class Field_Of_View : MonoBehaviour
     public float angle;
 
     public GameObject playerRef;
-     
+
     public LayerMask targetMask;
     public LayerMask obstacleMask;
 
     public bool canSeePlayer;
+    public float memoryDuration = 3f; // Duration for which the enemy remembers the player
+    public float lastSeenTime; // Time when the player was last seen by the enemy
 
     private void Start()
     {
@@ -23,7 +25,7 @@ public class Field_Of_View : MonoBehaviour
 
     private IEnumerator FOVRoutine() //Should help performance by limiting search frequency
     {
-        float delay = 0.2f;
+        float delay = 0.1f;
         WaitForSeconds wait = new WaitForSeconds(delay);
 
         while (true) //infinite loop
@@ -49,6 +51,7 @@ public class Field_Of_View : MonoBehaviour
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask))
                 {
                     canSeePlayer = true;
+                    lastSeenTime = Time.time; // Update the last seen time
                 }
                 else
                 {

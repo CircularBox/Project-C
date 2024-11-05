@@ -10,11 +10,12 @@ public class Enemy_AI : MonoBehaviour
     public int damageAmount = 10;
     float attackTimer = 0f; // Timer to track attack cooldown
     public float attackCooldown = 1f; // Time between attacks (adjust based on animation)
-    
+    Field_Of_View fieldOfView; // Reference to the Field_Of_View component
 
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        fieldOfView = GetComponent<Field_Of_View>(); // Get the Field_Of_View component
 
         // If target is not assigned in the Inspector, find the player GameObject and assign its transform
         if (target == null)
@@ -36,31 +37,41 @@ public class Enemy_AI : MonoBehaviour
     void Update()
     {
         // Ensure target is assigned before setting the destination
-        if (target != null)
+        if (target != null && fieldOfView != null)
         {
-            navMeshAgent.SetDestination(target.position);
+            bool canSeePlayer = fieldOfView.canSeePlayer;
+            bool isPlayerInMemory = Time.time - fieldOfView.lastSeenTime <= fieldOfView.memoryDuration;
 
-            float distanceToPlayer = Vector3.Distance(transform.position, target.position); // Corrected line
-
-            // Attack when in range
-            if (distanceToPlayer <= attackDistance && attackTimer <= 0f)
+            if (canSeePlayer || isPlayerInMemory)
             {
-                attackTimer = attackCooldown;
-                navMeshAgent.isStopped = true;
-                animator.SetTrigger("Attack");
-                AttackPlayer(target.gameObject);
+                navMeshAgent.SetDestination(target.position);
+
+                float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+
+                // Attack when in range
+                if (distanceToPlayer <= attackDistance && attackTimer <= 0f)
+                {
+                    attackTimer = attackCooldown;
+                    navMeshAgent.isStopped = true;
+                    animator.SetTrigger("Attack");
+                    AttackPlayer(target.gameObject);
+                }
+
+                if (attackTimer > 0f) // Decrement timer if attack is on cooldown
+                {
+                    attackTimer -= Time.deltaTime;
+                }
+
+                // Check if animation finished and attack timer depleted
+                if (!animator.IsInTransition(0) && !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && attackTimer <= 0f)
+                {
+                    // Resume agent movement
+                    navMeshAgent.isStopped = false;
+                }
             }
-        
-            if (attackTimer > 0f) // Decrement timer if attack is on cooldown
+            else
             {
-                attackTimer -= Time.deltaTime;
-            }
-
-            // Check if animation finished and attack timer depleted
-            if (!animator.IsInTransition(0) && !animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && attackTimer <= 0f)
-            {
-                // Resume agent movement
-                navMeshAgent.isStopped = false;
+                navMeshAgent.isStopped = true; // Stop the agent if the player is not visible and not in memory
             }
         }
     }
