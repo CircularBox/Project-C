@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class AI_Wandering : MonoBehaviour
 {
@@ -9,9 +8,9 @@ public class AI_Wandering : MonoBehaviour
     public float rotSpeed = 100f;
 
     private bool isWandering = false;
-    private bool isRotatingLeft = false;
-    private bool isRotatingRight = false;
+    private bool isRotating = false;
     private bool isWalking = false;
+    private Quaternion targetRotation;
 
     // Update is called once per frame
     void Update()
@@ -20,13 +19,14 @@ public class AI_Wandering : MonoBehaviour
         {
             StartCoroutine(Wander());
         }
-        if (isRotatingRight == true)
+        if (isRotating == true)
         {
-            transform.Rotate(transform.up * Time.deltaTime * rotSpeed);
-        }
-        if (isRotatingLeft == true)
-        {
-            transform.Rotate(transform.up * Time.deltaTime * -rotSpeed);
+            float step = rotSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, step);
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+            {
+                isRotating = false;
+            }
         }
         if (isWalking == true)
         {
@@ -36,11 +36,9 @@ public class AI_Wandering : MonoBehaviour
 
     IEnumerator Wander()
     {
-        int rotTime = Random.Range(1, 3);
         int rotateWait = Random.Range(1, 4);
-        int rotateLorR = Random.Range(1, 2);
-        int walkWait = Random.Range(1, 5);
-        int walkTime = Random.Range(1, 6);
+        int walkWait = Random.Range(1, 3);
+        int walkTime = Random.Range(1, 3);
 
         isWandering = true;
 
@@ -49,18 +47,15 @@ public class AI_Wandering : MonoBehaviour
         yield return new WaitForSeconds(walkTime);
         isWalking = false;
         yield return new WaitForSeconds(rotateWait);
-        if (rotateLorR == 1)
-        {
-            isRotatingRight = true;
-            yield return new WaitForSeconds(rotTime);
-            isRotatingRight = false;
-        }
-        if (rotateLorR == 2)
-        {
-            isRotatingLeft = true;
-            yield return new WaitForSeconds(rotTime);
-            isRotatingLeft = false;
-        }
+
+        // Generate a random angle between -180 and 180 degrees
+        float randomAngle = Random.Range(-180f, 180f);
+        targetRotation = Quaternion.Euler(0, randomAngle, 0) * transform.rotation;
+        isRotating = true;
+
+        // Wait until the rotation is complete
+        yield return new WaitUntil(() => !isRotating);
+
         isWandering = false;
     }
 }
