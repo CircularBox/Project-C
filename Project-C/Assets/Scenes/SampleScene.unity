@@ -562,7 +562,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4862032360408013182, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
       propertyPath: m_Speed
-      value: 0.5
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 5299930933817623315, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
       propertyPath: m_Enabled
@@ -619,6 +619,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4803014352389650695, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 854079820}
+    - targetCorrespondingSourceObject: {fileID: 4803014352389650695, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 854079821}
   m_SourcePrefab: {fileID: 100100000, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
 --- !u!1 &854079819 stripped
 GameObject:
@@ -637,7 +640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7658c866f7c036d4eb9db35701152813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 15
+  radius: 11
   angle: 110
   playerRef: {fileID: 0}
   targetMask:
@@ -647,8 +650,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   canSeePlayer: 0
-  memoryDuration: 3
-  lastSeenTime: 0
+  memoryDuration: 0.3
+  memoryTimer: 0
+--- !u!114 &854079821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854079819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01e4dbd51747d0f4b80fdc1f345acd09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 1.2
+  rotSpeed: 100
 --- !u!1 &1365501191
 GameObject:
   m_ObjectHideFlags: 0

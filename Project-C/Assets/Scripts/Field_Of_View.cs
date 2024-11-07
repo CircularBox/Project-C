@@ -15,7 +15,7 @@ public class Field_Of_View : MonoBehaviour
 
     public bool canSeePlayer;
     public float memoryDuration = 3f; // Duration for which the enemy remembers the player
-    public float lastSeenTime; // Time when the player was last seen by the enemy
+    public float memoryTimer; // Timer to remember the player
 
     private void Start()
     {
@@ -51,19 +51,18 @@ public class Field_Of_View : MonoBehaviour
                 if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask))
                 {
                     canSeePlayer = true;
-                    lastSeenTime = Time.time; // Update the last seen time
+                    memoryTimer = memoryDuration; // Reset the memory timer
+                    return; // Exit the method early if the player is seen
                 }
-                else
-                {
-                    canSeePlayer = false;
-                }
-            }
-            else
-            {
-                canSeePlayer = false;
             }
         }
-        else if (canSeePlayer)
+
+        // If the player is not seen, decrement the memory timer
+        if (memoryTimer > 0)
+        {
+            memoryTimer -= Time.deltaTime;
+        }
+        else
         {
             canSeePlayer = false;
         }

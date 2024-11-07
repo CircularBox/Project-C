@@ -11,11 +11,13 @@ public class Enemy_AI : MonoBehaviour
     float attackTimer = 0f; // Timer to track attack cooldown
     public float attackCooldown = 1f; // Time between attacks (adjust based on animation)
     Field_Of_View fieldOfView; // Reference to the Field_Of_View component
+    AI_Wandering aiWandering; // Reference to the AI_Wandering component
 
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         fieldOfView = GetComponent<Field_Of_View>(); // Get the Field_Of_View component
+        aiWandering = GetComponent<AI_Wandering>(); // Get the AI_Wandering component
 
         // If target is not assigned in the Inspector, find the player GameObject and assign its transform
         if (target == null)
@@ -40,10 +42,13 @@ public class Enemy_AI : MonoBehaviour
         if (target != null && fieldOfView != null)
         {
             bool canSeePlayer = fieldOfView.canSeePlayer;
-            bool isPlayerInMemory = Time.time - fieldOfView.lastSeenTime <= fieldOfView.memoryDuration;
+            bool isPlayerInMemory = fieldOfView.memoryTimer > 0;
 
             if (canSeePlayer || isPlayerInMemory)
             {
+                navMeshAgent.isStopped = false;
+                aiWandering.enabled = false; // Disable wandering behavior
+
                 navMeshAgent.SetDestination(target.position);
 
                 float distanceToPlayer = Vector3.Distance(transform.position, target.position);
@@ -72,6 +77,7 @@ public class Enemy_AI : MonoBehaviour
             else
             {
                 navMeshAgent.isStopped = true; // Stop the agent if the player is not visible and not in memory
+                aiWandering.enabled = true; // Enable wandering behavior
             }
         }
     }
