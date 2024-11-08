@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 100;
-    private int currentHealth;
+    public int currentHealth;
     public Vignette_Take_Damage vignetteEffect;
 
     public Health_Bar healthbar;
@@ -14,6 +14,15 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        if (healthbar == null)
+        {
+            healthbar = FindObjectOfType<Health_Bar>();
+            if (healthbar == null)
+            {
+                Debug.LogError("Health_Bar not found in the scene.");
+                return;
+            }
+        }
         healthbar.SetMaxHealth(maxHealth);
     }
 

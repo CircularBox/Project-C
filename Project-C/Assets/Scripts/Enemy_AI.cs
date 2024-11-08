@@ -19,32 +19,20 @@ public class Enemy_AI : MonoBehaviour
         fieldOfView = GetComponent<Field_Of_View>(); // Get the Field_Of_View component
         aiWandering = GetComponent<AI_Wandering>(); // Get the AI_Wandering component
 
-        // If target is not assigned in the Inspector, find the player GameObject and assign its transform
-        if (target == null)
-        {
-            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-            if (playerObject != null)
-            {
-                target = playerObject.transform;
-            }
-            else
-            {
-                Debug.LogWarning("Player object not found!");
-            }
-        }
-
         animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        // Ensure target is assigned before setting the destination
-        if (target != null && fieldOfView != null)
+        // Ensure fieldOfView is assigned before setting the target
+        if (fieldOfView != null)
         {
+            target = fieldOfView.playerRef != null ? fieldOfView.playerRef.transform : null;
+
             bool canSeePlayer = fieldOfView.canSeePlayer;
             bool isPlayerInMemory = fieldOfView.memoryTimer > 0;
 
-            if (canSeePlayer || isPlayerInMemory)
+            if (target != null && (canSeePlayer || isPlayerInMemory))
             {
                 navMeshAgent.isStopped = false;
                 aiWandering.enabled = false; // Disable wandering behavior

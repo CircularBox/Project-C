@@ -1176,7 +1176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ebc1857bbd49540ac1736d5bf176ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 1194583971198207697, guid: e003c8f0bf10bc6488926e1ad8bebad9, type: 3}
   attackDistance: 2
   damageAmount: 5
   attackCooldown: 1
@@ -1216,7 +1216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 11
   angle: 110
-  playerRef: {fileID: 0}
+  playerRef: {fileID: 1019450988095265805, guid: e003c8f0bf10bc6488926e1ad8bebad9, type: 3}
   targetMask:
     serializedVersion: 2
     m_Bits: 4

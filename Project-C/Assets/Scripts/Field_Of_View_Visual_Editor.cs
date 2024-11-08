@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(Field_Of_View))]
-
 public class Field_Of_View_Visual_Editor : Editor
 {
-    
     private void OnSceneGUI()
     {
         Field_Of_View fov = (Field_Of_View)target;
@@ -26,13 +25,12 @@ public class Field_Of_View_Visual_Editor : Editor
             Handles.color = Color.green;
             Handles.DrawLine(fov.transform.position, fov.playerRef.transform.position);
         }
-
     }
 
     private Vector3 DirectionFromAngle(float eulerY, float angleInDegrees)
     {
         angleInDegrees += eulerY;
-
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
 }
+#endif

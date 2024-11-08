@@ -19,16 +19,14 @@ public class Field_Of_View : MonoBehaviour
 
     private void Start()
     {
-        playerRef = GameObject.FindGameObjectWithTag("Player");
         StartCoroutine(FOVRoutine());
     }
 
-    private IEnumerator FOVRoutine() //Should help performance by limiting search frequency
+    private IEnumerator FOVRoutine() // Should help performance by limiting search frequency
     {
-        float delay = 0.1f;
-        WaitForSeconds wait = new WaitForSeconds(delay);
+        WaitForSeconds wait = new WaitForSeconds(0.1f);
 
-        while (true) //infinite loop
+        while (true) // Infinite loop
         {
             yield return wait;
             FieldOfViewCheck();
@@ -38,33 +36,50 @@ public class Field_Of_View : MonoBehaviour
     private void FieldOfViewCheck()
     {
         Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
+        GameObject closestPlayer = null;
+        float closestDistance = Mathf.Infinity;
 
-        if (rangeChecks.Length != 0)
+        foreach (Collider collider in rangeChecks)
         {
-            Transform target = rangeChecks[0].transform;
-            Vector3 directionToTarget = (target.position - transform.position).normalized;
-
-            if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
+            if (collider.CompareTag("Player")) // Ensure the target is tagged as "Player"
             {
-                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+                Transform target = collider.transform;
+                Vector3 directionToTarget = (target.position - transform.position).normalized;
 
-                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask))
+                if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
                 {
-                    canSeePlayer = true;
-                    memoryTimer = memoryDuration; // Reset the memory timer
-                    return; // Exit the method early if the player is seen
+                    float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+                    if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask))
+                    {
+                        if (distanceToTarget < closestDistance)
+                        {
+                            closestDistance = distanceToTarget;
+                            closestPlayer = target.gameObject;
+                        }
+                    }
                 }
             }
         }
 
-        // If the player is not seen, decrement the memory timer
-        if (memoryTimer > 0)
+        if (closestPlayer != null)
         {
-            memoryTimer -= Time.deltaTime;
+            playerRef = closestPlayer;
+            canSeePlayer = true;
+            memoryTimer = memoryDuration; // Reset the memory timer
         }
         else
         {
-            canSeePlayer = false;
+            // If the player is not seen, decrement the memory timer
+            if (memoryTimer > 0)
+            {
+                memoryTimer -= Time.deltaTime;
+            }
+            else
+            {
+                canSeePlayer = false;
+                playerRef = null;
+            }
         }
     }
 }
