@@ -1106,6 +1106,7 @@ GameObject:
   - component: {fileID: 4862032360408013182}
   - component: {fileID: 7064990258202645249}
   - component: {fileID: 4013015932412172894}
+  - component: {fileID: 5104223130206782183}
   m_Layer: 0
   m_Name: Zombie3
   m_TagString: Enemy
@@ -1176,9 +1177,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ebc1857bbd49540ac1736d5bf176ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1194583971198207697, guid: e003c8f0bf10bc6488926e1ad8bebad9, type: 3}
+  target: {fileID: 0}
   attackDistance: 2
-  damageAmount: 5
+  damageAmount: 20
   attackCooldown: 1
 --- !u!195 &4862032360408013182
 NavMeshAgent:
@@ -1216,7 +1217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: 11
   angle: 110
-  playerRef: {fileID: 1019450988095265805, guid: e003c8f0bf10bc6488926e1ad8bebad9, type: 3}
+  playerRef: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 4
@@ -1240,6 +1241,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 1.2
   rotSpeed: 100
+  obstructionLayer:
+    serializedVersion: 2
+    m_Bits: 0
+--- !u!114 &5104223130206782183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4803014352389650695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1312809854, guid: 0ae8d181602a00248a82f64a684a1c88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Multiplayer: {fileID: 0}
+  _uidString: b9926b92-b460-4108-9229-b03d1cc9897a
+  BucketBehaviors:
+  - Name: Min
+    NetLOD: 0
+    Frequency: -1
+  - Name: Low
+    NetLOD: 1
+    Frequency: 0
+  - Name: Mid
+    NetLOD: 2
+    Frequency: 0
+  - Name: High
+    NetLOD: 3
+    Frequency: 0
+  - Name: Max
+    NetLOD: 4
+    Frequency: 120
+  Reliability: 1
+  UseGlobalPosition: 1
+  OnlySyncFromRoomOwner: 1
+  refreshRate: 60
+  SyncedAxes: 63
 --- !u!1 &4956532458698703312
 GameObject:
   m_ObjectHideFlags: 0
